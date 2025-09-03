@@ -212,9 +212,9 @@ func (hc *httpConn) doRequest(ctx context.Context, msg interface{}) (io.ReadClos
 	}
 	req.ContentLength = int64(len(body))
 	req.GetBody = func() (io.ReadCloser, error) { return io.NopCloser(bytes.NewReader(body)), nil }
-
 	// set headers
 	hc.mu.Lock()
+	req.Host = hc.headers.Get("Host")
 	req.Header = hc.headers.Clone()
 	hc.mu.Unlock()
 	setHeaders(req.Header, headersFromContext(ctx))
